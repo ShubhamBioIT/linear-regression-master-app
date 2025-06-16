@@ -1,7 +1,7 @@
 # 🎯 Linear Regression Master — Learn & Explore ML Interactively
 
 <p align="center">
-  <img src="assets/app_screenshot.png" alt="App Screenshot" width="80%">
+  <img src="app_screenshot.png" alt="App Screenshot" width="80%">
 </p>
 
 [![Streamlit](https://img.shields.io/badge/built%20with-Streamlit-ff4b4b?style=flat-square&logo=streamlit)](https://streamlit.io)
