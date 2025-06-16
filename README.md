@@ -18,7 +18,6 @@ Whether you're a student learning ML, a data science enthusiast, or just curious
 ## 🚀 Live App
 
 **🔗 [Try the App Here](https://linear-regression-master.streamlit.app/)**  
-> *(Replace the link above with your actual Streamlit app URL after deployment)*
 
 ---
 
