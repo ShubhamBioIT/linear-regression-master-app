@@ -18,6 +18,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Show the title above everything
+st.markdown("""
+<div class="main-header">
+    <h1>🎯 Linear Regression Master</h1>
+    <p>Interactive tool to understand and visualize linear regression with real-time parameter adjustment</p>
+</div>
+""", unsafe_allow_html=True)
+
 # Custom CSS for professional styling
 st.markdown("""
 <style>
@@ -338,18 +346,41 @@ with st.sidebar:
     if st.button("🔄 Global Reset", key="global_reset"):
         for key in [
             "weight", "bias", "weight_min", "weight_max", "bias_min", "bias_max",
-            "optimal_weight", "optimal_bias", "ranges_calculated"
+            "optimal_weight", "optimal_bias", "ranges_calculated", "show_edu"
         ]:
             if key in st.session_state:
                 del st.session_state[key]
         st.rerun()
 
+# --- Sidebar button to show/hide educational content with toggle functionality ---
+with st.sidebar:
+    if "show_edu" not in st.session_state:
+        st.session_state.show_edu = False
+    if st.button("📚 About LR & This Tool", key="show_edu_btn"):
+        st.session_state.show_edu = not st.session_state.show_edu
+
 def create_educational_content():
     """Create educational explanations with beginner-friendly, visually attractive content"""
-    with st.expander("📚 What is Linear Regression? (Super Simple!)", expanded=False):
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); padding: 1.5rem; border-radius: 12px; color: #222; margin-bottom: 1rem;">
+        <h2 style="color: #764ba2;">📚 About Linear Regression</h2>
+        <p style="font-size: 1.1rem;">
+            Linear regression is one of the simplest and most powerful tools in statistics and machine learning. 
+            It helps us understand and predict relationships between two variables by fitting a straight line to data.
+        </p>
+        <ul style="font-size: 1.1rem;">
+            <li>Used in <b>finance</b> to predict stock prices</li>
+            <li>Applied in <b>healthcare</b> to estimate patient outcomes</li>
+            <li>Helps in <b>marketing</b> to forecast sales</li>
+            <li>And much more!</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.expander("🔎 What is Linear Regression? (Super Simple!)", expanded=False):
         st.markdown("""
         <div style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); padding: 1.5rem; border-radius: 12px; color: #222;">
-        <h3 style="color: #764ba2;">🔎 Linear Regression in a Nutshell</h3>
+        <h3 style="color: #764ba2;">Linear Regression in a Nutshell</h3>
         <ul style="font-size: 1.1rem;">
             <li><b>Imagine you have a bunch of dots on a graph.</b></li>
             <li>Linear regression draws the <b>straightest line</b> that goes as close as possible to all those dots.</li>
@@ -370,6 +401,13 @@ def create_educational_content():
             <li>To <b>predict</b> things (like house prices, exam scores, sales, etc.)</li>
             <li>To <b>see relationships</b> between two things (like hours studied vs. marks scored)</li>
         </ul>
+        <hr>
+        <h4 style="color: #764ba2;">📈 More Insights</h4>
+        <ul>
+            <li>Linear regression is the foundation for more advanced models (like logistic regression, polynomial regression, etc.)</li>
+            <li>It assumes a <b>linear relationship</b> between variables (straight line, not curves)</li>
+            <li>It's widely used because it's <b>interpretable</b> and <b>fast</b></li>
+        </ul>
         </div>
         """, unsafe_allow_html=True)
 
@@ -387,6 +425,13 @@ def create_educational_content():
         <div style="margin-top: 1rem; font-size: 1rem;">
             <b>Tip:</b> Try to get the <span style="color: #28a745;">Fit Score</span> as close to <b>100</b> as possible!
         </div>
+        <hr>
+        <h4 style="color: #764ba2;">🛠️ Extra Tips</h4>
+        <ul>
+            <li>Try uploading your own data to see how the model fits!</li>
+            <li>Experiment with different loss functions to understand their impact</li>
+            <li>Use the "Loss Landscape" to visualize how the error changes with different parameters</li>
+        </ul>
         </div>
         """, unsafe_allow_html=True)
 
@@ -421,6 +466,13 @@ def create_educational_content():
         <div style="margin-top: 1rem; font-size: 1rem;">
             <b>Still confused?</b> Just try each one and see how the line and numbers change!
         </div>
+        <hr>
+        <h4 style="color: #764ba2;">📚 More on Loss Functions</h4>
+        <ul>
+            <li>MSE is sensitive to outliers (big errors hurt more)</li>
+            <li>MAE is more robust to outliers</li>
+            <li>R² is a measure of how well your model explains the data</li>
+        </ul>
         </div>
         """, unsafe_allow_html=True)
 
@@ -435,6 +487,13 @@ def create_educational_content():
         <div style="margin-top: 1rem; font-size: 1rem;">
             <b>Goal:</b> Make the green lines as short as possible!
         </div>
+        <hr>
+        <h4 style="color: #764ba2;">🔬 Why Residuals Matter</h4>
+        <ul>
+            <li>They help you spot patterns your model missed</li>
+            <li>Randomly scattered residuals = good model</li>
+            <li>Patterns in residuals = maybe try a different model!</li>
+        </ul>
         </div>
         """, unsafe_allow_html=True)
 
@@ -446,6 +505,7 @@ def create_educational_content():
             <li>Used everywhere: business, science, sports, health, and more!</li>
             <li>Helps you <b>understand patterns</b> and <b>make predictions</b></li>
             <li>Super useful for <b>school projects, research, and real jobs</b></li>
+            <li>Forms the basis for more complex models (like neural networks!)</li>
         </ul>
         <div style="margin-top: 1rem; font-size: 1rem;">
             <b>Master this, and you're on your way to becoming a data wizard! 🧙‍♂️</b>
@@ -453,8 +513,11 @@ def create_educational_content():
         </div>
         """, unsafe_allow_html=True)
 
+# Show educational content only if sidebar button is toggled on
+if st.session_state.show_edu:
+    create_educational_content()
+
 def main():
-    create_header()
     with st.sidebar:
         st.markdown("### 🎛️ Control Panel")
         st.markdown("#### 📊 Dataset Selection")
@@ -691,7 +754,6 @@ def main():
                 )
                 landscape_placeholder.plotly_chart(landscape_fig, use_container_width=True)
 
-    create_educational_content()
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666;'>
