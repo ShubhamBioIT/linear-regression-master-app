@@ -80,7 +80,7 @@ Clone the repository and run it using Streamlit:
 
 ```bash
 # Clone this repo
-git clone https://github.com/your-username/linear-regression-master-app.git
+git clone https://github.com/ShubhamBioIT/linear-regression-master-app.git
 cd linear-regression-master-app
 
 # Install dependencies
