@@ -306,7 +306,8 @@ def find_optimal_parameters(X, y, loss_type):
         model.fit(X.reshape(-1, 1), y)
         return float(model.coef_[0]), float(model.intercept_)
     else:  # MAE
-        model = SGDRegressor(loss='absolute_error', max_iter=10000, tol=1e-3, random_state=42)
+        # Use 'epsilon_insensitive' for MAE as per scikit-learn documentation
+        model = SGDRegressor(loss='epsilon_insensitive', max_iter=10000, tol=1e-3, random_state=42)
         model.fit(X.reshape(-1, 1), y)
         return float(model.coef_[0]), float(model.intercept_)
 
@@ -670,10 +671,15 @@ def main():
             })
 
         # --- Real-time Feedback just below visualization ---
+        # Always recalculate optimal parameters for the selected loss_type
+        optimal_weight, optimal_bias = find_optimal_parameters(X, y, loss_type)
+        st.session_state.optimal_weight = optimal_weight
+        st.session_state.optimal_bias = optimal_bias
+
         st.markdown("### 🎮 Real-time Feedback")
         feedback_col1, feedback_col2, feedback_col3 = st.columns(3)
         with feedback_col1:
-            weight_status = "🎯 Perfect!" if abs(weight - st.session_state.optimal_weight) < 0.1 else "📈 Close" if abs(weight - st.session_state.optimal_weight) < 1 else "🔄 Adjust"
+            weight_status = "🎯 Perfect!" if abs(weight - optimal_weight) < 0.1 else "📈 Close" if abs(weight - optimal_weight) < 1 else "🔄 Adjust"
             st.markdown(f"""
             <div class="metric-card animated-card" style="background: linear-gradient(135deg, #ffd6e0 0%, #fcb69f 100%); color: #222;">
                 <h4>Weight Status</h4>
@@ -681,7 +687,7 @@ def main():
             </div>
             """, unsafe_allow_html=True)
         with feedback_col2:
-            bias_status = "🎯 Perfect!" if abs(bias - st.session_state.optimal_bias) < 0.1 else "📍 Close" if abs(bias - st.session_state.optimal_bias) < 1 else "🔄 Adjust"
+            bias_status = "🎯 Perfect!" if abs(bias - optimal_bias) < 0.1 else "📍 Close" if abs(bias - optimal_bias) < 1 else "🔄 Adjust"
             st.markdown(f"""
             <div class="metric-card animated-card" style="background: linear-gradient(135deg, #b2f7ef 0%, #4ecdc4 100%); color: #222;">
                 <h4>Bias Status</h4>
@@ -689,8 +695,8 @@ def main():
             </div>
             """, unsafe_allow_html=True)
         with feedback_col3:
-            weight_diff = abs(weight - st.session_state.optimal_weight)
-            bias_diff = abs(bias - st.session_state.optimal_bias)
+            weight_diff = abs(weight - optimal_weight)
+            bias_diff = abs(bias - optimal_bias)
             distance = np.sqrt(weight_diff**2 + bias_diff**2)
             overall_score = max(0, 100 - distance * 10)
             st.markdown(f"""
@@ -720,11 +726,10 @@ def main():
                 st.markdown(f"""
                 <div class="metric-card metric-animation animated-card" style="{metric_colors[i]}">
                     <h4 style="margin: 0;">{metric_name}</h4>
-                    <h2 style="margin: 0.5rem 0;">{value:.3f}</h2>
-                    <p style="margin: 0; font-size: 0.8rem; color: #333;">{delta_value}</p>
+                    <p style="font-size: 1.5rem; margin: 0;"><b>{value:.3f}</b></p>
+                    <p style="margin: 0; font-size: 1rem;">{delta_value}</p>
                 </div>
                 """, unsafe_allow_html=True)
-
         col_current, col_optimal = st.columns(2)
         with col_current:
             st.markdown(f"""
@@ -738,8 +743,8 @@ def main():
             st.markdown(f"""
             <div class="success-box animated-card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); color: #222;">
                 <h4>⭐ Optimal Parameters</h4>
-                <p><strong>Weight:</strong> {st.session_state.optimal_weight:.3f}</p>
-                <p><strong>Bias:</strong> {st.session_state.optimal_bias:.3f}</p>
+                <p><strong>Weight:</strong> {optimal_weight:.3f}</p>
+                <p><strong>Bias:</strong> {optimal_bias:.3f}</p>
                 <p><strong>Distance:</strong> {distance:.3f}</p>
             </div>
             """, unsafe_allow_html=True)
