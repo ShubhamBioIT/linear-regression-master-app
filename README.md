@@ -1,4 +1,4 @@
-# 🎯 Linear Regression Master
+# 🎯 Linear Regression Master — Learn & Explore ML Interactively
 
 <p align="center">
   <img src="assets/app_screenshot.png" alt="App Screenshot" width="80%">
@@ -8,8 +8,6 @@
 [![Python](https://img.shields.io/badge/python-3.13%2B-blue?style=flat-square&logo=python)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
-
-# 🎯 Linear Regression Master — Learn & Explore ML Interactively
 
 Welcome to **Linear Regression Master**, an advanced and beautifully interactive machine learning app built using **Streamlit**. This tool is designed not just to run linear regression models, but to **teach you how they work** — visually, intuitively, and in real-time.
 
